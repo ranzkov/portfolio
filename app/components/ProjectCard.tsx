@@ -35,23 +35,25 @@ export default function ProjectCard({ project }: ProjectCardProps) {
     );
   };
 
-  // Cek apakah projek termasuk aplikasi mobile berdasarkan stack
+  // Deteksi jika proyek berbasis Mobile
   const isMobileProject = project.stack.some((tech) =>
     ["Flutter", "Dart", "React Native", "Android", "iOS"].includes(tech)
   );
 
   return (
-    <article className="border-2 border-[#192841] bg-[#ffd1cd] p-6 shadow-[4px_4px_0px_0px_rgba(25,40,65,1)]">
+    <article className="border-2 border-[#192841] bg-[#ffd1cd] p-4 sm:p-6 shadow-[4px_4px_0px_0px_rgba(25,40,65,1)]">
       {/* HEADER */}
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#192841]/30 pb-3 text-xs">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col gap-2 border-b border-[#192841]/30 pb-3 sm:flex-row sm:items-center sm:justify-between text-xs">
+        <div className="flex flex-wrap items-center gap-2">
           <span className="border border-[#192841] bg-[#192841] px-2 py-0.5 font-bold text-[#ffd1cd]">
             {project.id}
           </span>
-          <span className="font-semibold opacity-80">{project.path}</span>
+          <span className="break-all font-semibold opacity-80 sm:break-normal">
+            {project.path}
+          </span>
         </div>
 
-        <div className="flex items-center gap-4 text-[11px]">
+        <div className="flex flex-wrap items-center gap-3 text-[11px]">
           <span>
             Role: <strong>{project.role}</strong>
           </span>
@@ -61,21 +63,21 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         </div>
       </div>
 
-      {/* CONTENT */}
-      <div className="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-center">
-        {/* INFO (KIRI) */}
+      {/* CONTENT GRID (Stack vertikal di mobile, 2 kolom di desktop) */}
+      <div className="mt-4 flex flex-col gap-6 lg:grid lg:grid-cols-2 lg:items-center">
+        {/* INFO (KIRI / ATAS) */}
         <div className="flex h-full flex-col justify-between">
           <div>
-            <h3 className="text-xl font-bold">{project.title}</h3>
+            <h3 className="text-lg font-bold sm:text-xl">{project.title}</h3>
             <p className="mt-1 text-xs font-semibold text-[#192841]/70">
               Client/Context: {project.client}
             </p>
 
-            <p className="mt-4 text-xs leading-relaxed opacity-90">
+            <p className="mt-3 text-xs leading-relaxed opacity-90">
               {project.description}
             </p>
 
-            <div className="mt-4 border-l-2 border-[#192841] py-1 pl-3 text-[11px] font-semibold opacity-80">
+            <div className="mt-3 border-l-2 border-[#192841] py-1 pl-3 text-[11px] font-semibold opacity-80">
               Key Implementations: {project.metrics}
             </div>
           </div>
@@ -109,73 +111,73 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           </div>
         </div>
 
-        {/* SCREENSHOTS SLIDER (KANAN) */}
-{project.images.length > 0 && (
-  <div className="flex flex-col items-center justify-center">
-    <div
-      className={`relative mx-auto overflow-hidden border-2 border-[#192841] bg-[#192841]/5 ${
-        isMobileProject
-          ? "w-full max-w-[180px] aspect-[9/19] max-h-[360px] rounded-2xl p-1.5"
-          : "w-full aspect-[16/9] rounded-none"
-      }`}
-    >
-      <div
-        className="flex h-full transition-transform duration-300 ease-out"
-        style={{
-          transform: `translateX(-${currentImageIndex * 100}%)`,
-        }}
-      >
-        {project.images.map((image, index) => (
-          <img
-            key={index}
-            src={image}
-            alt={`${project.title} screenshot ${index + 1}`}
-            className={`h-full w-full shrink-0 ${
-              isMobileProject
-                ? "object-contain rounded-xl"
-                : "object-cover"
-            }`}
-          />
-        ))}
-      </div>
-
-      {/* TOMBOL NAVIGASI SLIDER */}
-      {project.images.length > 1 && (
-            <>
-            <button
-                onClick={prevSlide}
-                className="absolute left-1 top-1/2 -translate-y-1/2 border border-[#192841] bg-[#ffd1cd] px-1 py-0.5 text-[10px] font-bold shadow-[1px_1px_0px_0px_rgba(25,40,65,1)] hover:bg-[#192841] hover:text-[#ffd1cd] transition-colors"
-                aria-label="Previous image"
+        {/* SCREENSHOTS SLIDER (KANAN / BAWAH) */}
+        {project.images.length > 0 && (
+          <div className="flex w-full flex-col items-center justify-center pt-2 lg:pt-0">
+            <div
+              className={`relative overflow-hidden border-2 border-[#192841] bg-[#192841]/5 ${
+                isMobileProject
+                  ? "w-full max-w-[180px] sm:max-w-[200px] aspect-[9/19] rounded-xl p-1.5"
+                  : "w-full aspect-[16/9] rounded-none"
+              }`}
             >
-                ◀
-            </button>
-            <button
-                onClick={nextSlide}
-                className="absolute right-1 top-1/2 -translate-y-1/2 border border-[#192841] bg-[#ffd1cd] px-1 py-0.5 text-[10px] font-bold shadow-[1px_1px_0px_0px_rgba(25,40,65,1)] hover:bg-[#192841] hover:text-[#ffd1cd] transition-colors"
-                aria-label="Next image"
-            >
-                ▶
-            </button>
-
-            {/* INDIKATOR TITIK */}
-            <div className="absolute bottom-1.5 left-1/2 flex -translate-x-1/2 gap-1 rounded-full bg-[#192841]/60 px-1.5 py-0.5">
-                {project.images.map((_, idx) => (
-                <button
-                    key={idx}
-                    onClick={() => setCurrentImageIndex(idx)}
-                    className={`h-1.5 rounded-full transition-all ${
-                    currentImageIndex === idx
-                        ? "bg-[#ffd1cd] w-3"
-                        : "bg-white/50 w-1.5"
+              <div
+                className="flex h-full transition-transform duration-300 ease-out"
+                style={{
+                  transform: `translateX(-${currentImageIndex * 100}%)`,
+                }}
+              >
+                {project.images.map((image, index) => (
+                  <img
+                    key={index}
+                    src={image}
+                    alt={`${project.title} screenshot ${index + 1}`}
+                    className={`h-full w-full shrink-0 ${
+                      isMobileProject
+                        ? "object-contain rounded-lg"
+                        : "object-cover"
                     }`}
-                />
+                  />
                 ))}
+              </div>
+
+              {/* NAVIGASI SLIDER */}
+              {project.images.length > 1 && (
+                <>
+                  <button
+                    onClick={prevSlide}
+                    className="absolute left-1 top-1/2 -translate-y-1/2 border border-[#192841] bg-[#ffd1cd] px-1.5 py-1 text-[10px] font-bold shadow-[1px_1px_0px_0px_rgba(25,40,65,1)] hover:bg-[#192841] hover:text-[#ffd1cd] transition-colors"
+                    aria-label="Previous image"
+                  >
+                    ◀
+                  </button>
+                  <button
+                    onClick={nextSlide}
+                    className="absolute right-1 top-1/2 -translate-y-1/2 border border-[#192841] bg-[#ffd1cd] px-1.5 py-1 text-[10px] font-bold shadow-[1px_1px_0px_0px_rgba(25,40,65,1)] hover:bg-[#192841] hover:text-[#ffd1cd] transition-colors"
+                    aria-label="Next image"
+                  >
+                    ▶
+                  </button>
+
+                  {/* INDIKATOR TITIK */}
+                  <div className="absolute bottom-1.5 left-1/2 flex -translate-x-1/2 gap-1 rounded-full bg-[#192841]/70 px-1.5 py-0.5">
+                    {project.images.map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setCurrentImageIndex(idx)}
+                        className={`h-1.5 rounded-full transition-all ${
+                          currentImageIndex === idx
+                            ? "bg-[#ffd1cd] w-3"
+                            : "bg-white/50 w-1.5"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
-            </>
+          </div>
         )}
-        </div>
-    </div>
-    )}
       </div>
     </article>
   );
